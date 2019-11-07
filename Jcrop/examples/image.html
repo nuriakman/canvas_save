@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Jcrop Example</title>
+    <link rel="stylesheet" href="../dist/jcrop.dev.css" />
+    <script src="../dist/jcrop.js"></script>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+        background-color: #ededed;
+      }
+      img#KAYNAK { max-width: 780px; }
+    </style>
+  </head>
+  <body>
+
+    <imgXXX id="KAYNAK" alt="kaynak" src="https://d3o1694hluedf9.cloudfront.net/market-750.jpg" />
+    <button onclick="RESIM_AL()">resize</button>
+    <img id="HEDEF"  alt="hedef"  src="" />
+    
+    <canvas id="KAYNAK_CANVAS"></canvas>
+
+    <script>
+
+      var canvas = document.getElementById('KAYNAK_CANVAS'),
+      context = canvas.getContext('2d');
+
+      make_base();
+
+      function make_base()
+      {
+        base_image = new Image();
+        base_image.src = 'https://d3o1694hluedf9.cloudfront.net/market-750.jpg';
+        base_image.onload = function(){
+          context.drawImage(base_image, 0, 0, this.width, this.height);
+        }
+      }
+    </script>
+
+
+
+    <script>
+      function RESIM_AL() {
+        // cropImage(origImg, targetWidth, targetHeight, xOffest, yOffset) 
+        cropImage(document.getElementById("KAYNAK"), widget.pos.w, widget.pos.h, widget.pos.x, widget.pos.y) 
+      }
+
+      function cropImage(origImg, targetWidth, targetHeight, xOffest, yOffset) {
+        var resizeCanvas = document.createElement('canvas');
+        resizeCanvas.width = targetWidth;
+        resizeCanvas.height = targetHeight;
+        resizeCanvas.getContext('2d').drawImage(origImg, xOffest, yOffset, origImg.width, origImg.height);
+        return resizeCanvas.toDataURL();
+      }
+    </script>
+
+
+
+    <script>
+      // Kaynak: https://jcrop.com/
+      const stage = Jcrop.attach('KAYNAK',{
+        multi: false,
+        aspectRatio: 3/4,
+        handles: ['n', 's', 'e', 'w', 'sw', 'nw', 'ne', 'se'],
+        shade: true,
+        shadeColor: 'black',
+        shadeOpacity: 0.5,
+        anRemove: true,
+      });
+
+      stage.listen('crop.change',(widget,e) => {
+        //console.log(widget.pos);
+        console.log(widget.pos.x, widget.pos.y, widget.pos.w, widget.pos.h);
+      });      
+
+      stage.listen('crop.update',(widget,e) => {
+      //  console.log(widget.pos);
+      });      
+    </script>
+
+
+  </body>
+</html>
